@@ -13,6 +13,20 @@
   };
 
   // COMMENT: What does this method do?  What is it's execution path?
+  //populateFilters is a method on articleView that first creates two variables, options and template
+  //where template is given a Handlebars compiler of the option template
+  //options is now going to be given a value that is equal to to an array of option-templates with
+  //the author names as the text val. Those author names were the reult of functional programming
+  //in which the Article.all array was mapped for just its author names where duplicates were not allowed
+  //this resulting array was mapped once more where the resulting array in an array of those option templates
+  //once this is complete, the if statement validates wether or not the author filter has any authors existing in it
+  //if not, we append the options results to the author filter id.
+
+  //Article.allCategories utilizes are existing table data base in which the data grabbed will be queried for non repeating categories
+  //this result requires a callback function in which our anonymous function takes all the resulting rows as an argument
+  //like the author filter if statement, the category fiter must not have existing categories in it before appending the resulting
+  //categories. These categories were obtained through functional programming where the rows were mapped to return an array with category option templates
+
   articleView.populateFilters = function() {
     var options,
       template = Handlebars.compile($('#option-template').text());
@@ -38,9 +52,15 @@
   };
 
   // COMMENT: What does this method do?  What is it's execution path?
+  //this is a method in which we use jQuery to detect changes in our filters
+  //the 'change' event is listened to when the user changes the select drop box
+  //this eventhendler will call an anonymous function for which a var resource will have the value category or author dependant on which filter the user selects on
+
+  //then we use that resulting value to concatanate into a page route that will also include the value of 'this' which will
+  //give us the appropriate the resuting url that we want to Redirect to
   articleView.handleFilters = function() {
-    $('#filters').one('change', 'select', function() {
-      resource = this.id.replace('-filter', '');
+    $('#filters').on('change', 'select', function() {
+      var resource = this.id.replace('-filter', '');
       page('/' + resource + '/' + $(this).val().replace(/\W+/g, '+')); // Replace any/all whitespace with a +
     });
   };
@@ -118,6 +138,10 @@
   };
 
   // COMMENT: What does this method do?  What is it's execution path?
+  //this is a method on the articleView method that takes articles as an arguement
+  //first we show everthing that exists in the articles Id, including its children but also hide articles siblings
+  //we then remove the pre-existing articles and append the new articles from the articles array to the #article id
+  //we then call articleView.populateFilters to populate the filters based on our articles array
   articleView.index = function(articles) {
     $('#articles').show().siblings().hide();
 
@@ -128,6 +152,7 @@
 
     articleView.populateFilters();
     // COMMENT: What does this method do?  What is it's execution path?
+    //once the populateFilters is called, we can then hall the handlers on these filters which we explain above
     articleView.handleFilters();
 
     // DONE: Replace setTeasers with just the truncation logic, if needed:
